@@ -1,0 +1,25 @@
+redis:
+  image: testlink/redis
+  ports:
+    - "6379:16379"
+  volumes:
+    - /var/redis:/mnt
+
+app:
+  image: linktest/pythonapp:latest
+  ports:
+    - "5000:5000"
+  volumes:
+    - /vagrant-app:/mnt-app
+    - /vagrant-log/app:/mnt-log
+  links:
+    - redis
+
+nginx:
+  image: linktest/nginx:latest
+  volumes:
+    - /vagrant-log/nginx:/var/log/nginx
+  ports:
+    - "80:80"
+  links:
+    - app
